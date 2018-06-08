@@ -21,24 +21,25 @@
         upateCount();
 
         form.on('submit', () => {
-            let gg = 'lll';
+
             const data = {'url': $('#url_url').val()}
             $.ajax({
                 url: reduction_create,
                 type: 'POST',
                 data,
                 success: (event, request, settings) => {
-                    $( "ul" ).last().after(event);
+                    if ($( "ul" ).last().length) {
+                        $( "ul" ).last().after(event);
+                    } else {
+                        $( "#urls" ).append(event);
+                    }
                 },
                 error: ( event, jqxhr, settings, thrownError ) => {
                     alert(event.responseJSON.msg);
                 },
                 complete: () => {
                     $( "li.redirect_url" ).last().on('click', (event) => {
-                        const divElement = $(event.target).parent().next().find('div');
-                        let divData = $(event.target).parent().next().find('div').text();
-                        const count = parseInt(divData) + 1;
-                        divElement.text(count);
+                        addEventOnClik(event);
                     })
                 }
             });
@@ -49,12 +50,16 @@
             $(".redirect_url").each((index, elem) => {
                 let itelem = $(elem);
                 itelem.on('click', (event) => {
-                    const divElement = $(event.target).parent().next().find('div');
-                    let divData = $(event.target).parent().next().find('div').text();
-                    const count = parseInt(divData) + 1;
-                    divElement.text(count);
+                    addEventOnClik(event);
                 })
             });
+        }
+
+        function addEventOnClik(event) {
+            const divElement = $(event.target).parent().next().find('div');
+            let divData = $(event.target).parent().next().find('div').text();
+            const count = parseInt(divData) + 1;
+            divElement.text(count);
         }
     });
 

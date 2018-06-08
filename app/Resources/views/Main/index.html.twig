@@ -18,15 +18,8 @@
         const form = $('#check_submited');
         const reduction_create = Routing.generate('reduction_url_encode');
 
-        $(".redirect_url").each((index, elem) => {
-            let itelem = $(elem);
-            itelem.on('click', (event) => {
-                const divElement = $(event.target).parent().next().find('div');
-                let divData = $(event.target).parent().next().find('div').text();
-                const count = parseInt(divData) + 1;
-                divElement.text(count);
-            })
-        });
+        upateCount();
+
         form.on('submit', () => {
             let gg = 'lll';
             const data = {'url': $('#url_url').val()}
@@ -41,12 +34,28 @@
                     alert(event.responseJSON.msg);
                 },
                 complete: () => {
-                    // selectCustomer()
-                },
+                    $( "li.redirect_url" ).last().on('click', (event) => {
+                        const divElement = $(event.target).parent().next().find('div');
+                        let divData = $(event.target).parent().next().find('div').text();
+                        const count = parseInt(divData) + 1;
+                        divElement.text(count);
+                    })
+                }
             });
             return false;
-        })
+        });
 
+        function upateCount() {
+            $(".redirect_url").each((index, elem) => {
+                let itelem = $(elem);
+                itelem.on('click', (event) => {
+                    const divElement = $(event.target).parent().next().find('div');
+                    let divData = $(event.target).parent().next().find('div').text();
+                    const count = parseInt(divData) + 1;
+                    divElement.text(count);
+                })
+            });
+        }
     });
 
 </script>

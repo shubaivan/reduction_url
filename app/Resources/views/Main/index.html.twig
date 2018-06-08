@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {'id': 'check_submited'}}) }}
+
+    {{ form_end(form) }}
+    <div id="urls">
+        {# @var urls \AppBundle\Entity\ShortUrl[] #}
+        {% for url in urls %}
+            {% include 'Main/_part_url.html.twig' with {url:url} %}
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(() => {
+        const form = $('#check_submited');
+        const reduction_create = Routing.generate('reduction_url_encode');
+        form.on('submit', () => {
+            let gg = 'lll';
+            const data = {'url': $('#url_url').val()}
+            $.ajax({
+                url: reduction_create,
+                type: 'POST',
+                data,
+                success: (event, request, settings) => {
+                    $( "ul" ).last().after(event);
+                },
+                error: ( event, jqxhr, settings, thrownError ) => {
+                    alert(event.responseJSON.msg);
+                },
+                complete: () => {
+                    // selectCustomer()
+                },
+            });
+            return false;
+        })
+
+    });
+
+</script>
+{% endblock %}

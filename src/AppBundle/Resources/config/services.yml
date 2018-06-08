@@ -1,0 +1,47 @@
+parameters:
+    reduction_url.hashids.salt: this is my salt
+    reduction_url.hashids.min_length: 5
+    reduction_url.hashids.alphabet: abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890
+    reduction_url.class.entity: AppBundle\Entity\ShortUrl
+    reduction_url.class.factory: AppBundle\Factory\ShortUrlFactory
+    reduction_url.class.repository: AppBundle\Repository\ShortUrlRepository
+
+services:
+    reduction_url.hash.hashid:
+        class: Hashids\Hashids
+        arguments:
+            - "%reduction_url.hashids.salt%"
+            - "%reduction_url.hashids.min_length%"
+            - "%reduction_url.hashids.alphabet%"
+
+    reduction_url.factory.short_url:
+        class: "%reduction_url.class.factory%"
+        arguments:
+            - "%reduction_url.class.entity%"
+
+    reduction_url.repository.short_url:
+        class: "%reduction_url.class.repository%"
+        factory: 'doctrine.orm.entity_manager:getRepository'
+        arguments:
+            - "%reduction_url.class.entity%"
+
+    reduction_url.service.encode:
+        class: AppBundle\Service\EncodeService
+        arguments:
+            - "@reduction_url.hash.hashid"
+            - "@reduction_url.repository.short_url"
+            - "@event_dispatcher"
+
+    reduction_url.service.redirect:
+        class: AppBundle\Service\RedirectService
+        arguments:
+            - "@reduction_url.hash.hashid"
+            - "@reduction_url.repository.short_url"
+            - "@event_dispatcher"
+
+    app.reduction.event:
+        class: AppBundle\EventSubscriber\ReductionEventSubscriber
+        arguments:
+            - "@reduction_url.repository.short_url"
+        tags:
+            - { name: kernel.event_listener, event: reduction_url.redirected, method: onRedirected }

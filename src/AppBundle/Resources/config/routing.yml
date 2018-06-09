@@ -15,7 +15,7 @@ reduction_url_encode:
     methods: POST
 
 reduction_main:
-    path: /main
+    path: /
     defaults: { _controller: AppBundle:Main:index }
     methods: GET
 

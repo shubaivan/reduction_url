@@ -10,6 +10,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class ShortUrl.
  *
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ShortUrlRepository")
  * @ORM\Table(name="short_url", indexes={@ORM\Index(name="idx", columns={"id", "url"})})
  */
